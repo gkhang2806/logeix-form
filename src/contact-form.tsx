@@ -169,7 +169,7 @@ const ContactForm = () => {
         <label className="block text-sm font-medium mb-2">
           Which of these best describes your business model?
         </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
           {[
             { id: 'dtc-brand', label: 'DTC Brand', icon: Package },
             { id: 'online-retailer', label: 'Online Retailer', icon: ShoppingCart },
@@ -205,7 +205,7 @@ const ContactForm = () => {
             <label className="block text-sm font-medium mb-2">
               What was your average monthly Shopify revenue over the last 3 months?
             </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
               {[
                 'Zero (Startup)',
                 `Less than ${currencySymbol}15,000`,
@@ -240,7 +240,7 @@ const ContactForm = () => {
             <label className="block text-sm font-medium mb-2">
               How much do you currently spend on digital marketing per month?
             </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
               {[
                 `Less than ${currencySymbol}10,000`,
                 `${currencySymbol}10,000 - ${currencySymbol}14,999`,
@@ -271,7 +271,7 @@ const ContactForm = () => {
             <label className="block text-sm font-medium mb-2">
               Which channels do you use for marketing? <span className="text-gray-500">(Select all that apply)</span>
             </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
               {[
                 { id: 'Marketing-Channel-SEO', label: 'SEO', icon: TextSearch },
                 { id: 'Marketing-Channel-Google-Shopping', label: 'Google Shopping', icon: ShoppingCart },

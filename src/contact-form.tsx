@@ -92,14 +92,14 @@ const ContactForm = () => {
     const redirectUrl = isQualified 
       ? `/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : '/thank-you';
-
+  
     try {
-      // First send to Google Sheets
-      const response = await fetch('https://script.google.com/macros/s/AKfycbyd45AaPeTrg2oARdqVWBhL8h6XLFRxXR6lfD8DJ3EjZnZZzIfaQSln9gQ44rMGleJ7ZA/exec', {
+      // Using no-cors mode
+      await fetch('https://script.google.com/macros/s/AKfycbyd45AaPeTrg2oARdqVWBhL8h6XLFRxXR6lfD8DJ3EjZnZZzIfaQSln9gQ44rMGleJ7ZA/exec', {
         method: 'POST',
-        mode: 'cors',
+        mode: 'no-cors',  // Changed this
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',  // Must be text/plain for no-cors
         },
         body: JSON.stringify({
           timestamp: new Date().toISOString(),
@@ -107,17 +107,13 @@ const ContactForm = () => {
           isQualified
         })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
-
-      // Then redirect the parent window
+  
+      // Since no-cors won't give us a response we can read,
+      // we'll assume success and redirect
       window.parent.location.href = redirectUrl;
     } catch (error) {
       console.error('Error submitting form:', error);
       setIsSubmitting(false);
-      // You might want to show an error message to the user here
     }
   };
 

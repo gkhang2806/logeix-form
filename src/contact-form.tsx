@@ -88,26 +88,39 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    console.log('Current hostname:', window.location.hostname);
-    
     const isQualified = checkQualification();
     
-    const hostname = window.location.hostname;
-    console.log('Resolving domain for:', hostname);
-    
+    // Get the correct hostname - check if we're in an iframe
+    const isInIframe = window !== window.parent;
     let parentDomain: string;
-    if (hostname.includes('webflow.io')) {
-      parentDomain = 'https://logeix.webflow.io';
-      console.log('Using Webflow domain');
-    } else if (hostname.includes('github.io')) {
-      parentDomain = 'https://logeix.com';
-      console.log('Using Github domain');
-    } else if (hostname.includes('logeix.com')) {
-      parentDomain = 'https://logeix.com';
-      console.log('Using Logeix domain');
+    
+    if (isInIframe) {
+      // Try to get parent's location, fallback to referrer if not accessible
+      try {
+        const parentLocation = window.parent.location.hostname;
+        console.log('Parent location:', parentLocation);
+        
+        if (parentLocation.includes('webflow.io')) {
+          parentDomain = 'https://logeix.webflow.io';
+        } else {
+          parentDomain = 'https://logeix.com';
+        }
+      } catch (e) {
+        // If we can't access parent location (CORS), use document.referrer
+        const referrer = document.referrer;
+        console.log('Using referrer:', referrer);
+        
+        if (referrer.includes('webflow.io')) {
+          parentDomain = 'https://logeix.webflow.io';
+        } else {
+          parentDomain = 'https://logeix.com';
+        }
+      }
     } else {
-      parentDomain = 'https://logeix.com';
-      console.log('Using default domain');
+      // Not in iframe, use current location
+      parentDomain = window.location.hostname.includes('webflow.io') 
+        ? 'https://logeix.webflow.io' 
+        : 'https://logeix.com';
     }
     
     console.log('Selected parent domain:', parentDomain);
@@ -119,12 +132,6 @@ const ContactForm = () => {
     console.log('Will redirect to:', redirectUrl);
   
     try {
-      console.log('Sending form data:', {
-        timestamp: new Date().toISOString(),
-        ...formData,
-        isQualified
-      });
-  
       await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
         method: 'POST',
         mode: 'no-cors',
@@ -138,8 +145,13 @@ const ContactForm = () => {
         })
       });
   
-      console.log('Form submitted, starting redirect...');
-      window.parent.location.href = redirectUrl;
+      // Proper iframe-aware redirect
+      if (isInIframe) {
+        window.parent.location.href = redirectUrl;
+      } else {
+        window.location.href = redirectUrl;
+      }
+      
     } catch (error) {
       console.error('Error submitting form:', error);
       setIsSubmitting(false);

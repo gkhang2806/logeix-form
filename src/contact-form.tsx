@@ -27,18 +27,6 @@ interface FormData {
   qualified: boolean;
 }
 
-// Define the type for our domain mapping
-type DomainMap = {
-  [key: string]: string;
-};
-
-// Add the type to our domains object
-const PARENT_DOMAINS: DomainMap = {
-  'gkhang2806.github.io': 'https://logeix.com',
-  'logeix.webflow.io': 'https://logeix.webflow.io',
-  'logeix.com': 'https://logeix.com'
-};
-
 const ContactForm = () => {
   // Form state with typed interface
   const [formData, setFormData] = useState<FormData>({
@@ -100,16 +88,13 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Debug log current location
     console.log('Current hostname:', window.location.hostname);
     
     const isQualified = checkQualification();
     
-    // Get iframe's location
     const hostname = window.location.hostname;
     console.log('Resolving domain for:', hostname);
     
-    // Determine parent domain with strict matching
     let parentDomain: string;
     if (hostname.includes('webflow.io')) {
       parentDomain = 'https://logeix.webflow.io';
@@ -130,18 +115,17 @@ const ContactForm = () => {
     const redirectUrl = isQualified 
       ? `${parentDomain}/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : `${parentDomain}/thank-you`;
-
+  
     console.log('Will redirect to:', redirectUrl);
-
+  
     try {
-      // Log the data we're about to send
       console.log('Sending form data:', {
         timestamp: new Date().toISOString(),
         ...formData,
         isQualified
       });
-
-      const response = await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
+  
+      await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -153,7 +137,7 @@ const ContactForm = () => {
           isQualified
         })
       });
-
+  
       console.log('Form submitted, starting redirect...');
       window.parent.location.href = redirectUrl;
     } catch (error) {

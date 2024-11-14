@@ -100,18 +100,48 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Debug log current location
+    console.log('Current hostname:', window.location.hostname);
+    
     const isQualified = checkQualification();
     
-    // Get parent domain with type safety
+    // Get iframe's location
     const hostname = window.location.hostname;
-    const parentDomain = PARENT_DOMAINS[hostname] || 'https://logeix.com';
+    console.log('Resolving domain for:', hostname);
+    
+    // Determine parent domain with strict matching
+    let parentDomain: string;
+    if (hostname.includes('webflow.io')) {
+      parentDomain = 'https://logeix.webflow.io';
+      console.log('Using Webflow domain');
+    } else if (hostname.includes('github.io')) {
+      parentDomain = 'https://logeix.com';
+      console.log('Using Github domain');
+    } else if (hostname.includes('logeix.com')) {
+      parentDomain = 'https://logeix.com';
+      console.log('Using Logeix domain');
+    } else {
+      parentDomain = 'https://logeix.com';
+      console.log('Using default domain');
+    }
+    
+    console.log('Selected parent domain:', parentDomain);
     
     const redirectUrl = isQualified 
       ? `${parentDomain}/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : `${parentDomain}/thank-you`;
-  
+
+    console.log('Will redirect to:', redirectUrl);
+
     try {
-      await fetch('YOUR_GOOGLE_SCRIPT_URL', {
+      // Log the data we're about to send
+      console.log('Sending form data:', {
+        timestamp: new Date().toISOString(),
+        ...formData,
+        isQualified
+      });
+
+      const response = await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -123,8 +153,8 @@ const ContactForm = () => {
           isQualified
         })
       });
-  
-      // Since we're using no-cors, assume success and redirect
+
+      console.log('Form submitted, starting redirect...');
       window.parent.location.href = redirectUrl;
     } catch (error) {
       console.error('Error submitting form:', error);

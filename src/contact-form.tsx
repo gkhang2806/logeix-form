@@ -27,7 +27,7 @@ interface FormData {
   qualified: boolean;
 }
 
-const PARENT_DOMAINS = {
+const PARENT_DOMAINS: DomainMap = {
   'gkhang2806.github.io': 'https://logeix.com',
   'logeix.webflow.io': 'https://logeix.webflow.io',
   'logeix.com': 'https://logeix.com'
@@ -96,20 +96,20 @@ const ContactForm = () => {
     
     const isQualified = checkQualification();
     
-    // Get parent domain
-    const parentDomain = PARENT_DOMAINS[window.location.hostname] || 'https://logeix.com';
+    // Get parent domain with type safety
+    const hostname = window.location.hostname;
+    const parentDomain = PARENT_DOMAINS[hostname] || 'https://logeix.com';
     
     const redirectUrl = isQualified 
       ? `${parentDomain}/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : `${parentDomain}/thank-you`;
   
     try {
-      // Using no-cors mode
-      await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
+      await fetch('YOUR_GOOGLE_SCRIPT_URL', {
         method: 'POST',
-        mode: 'no-cors',  // Changed this
+        mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain',  // Must be text/plain for no-cors
+          'Content-Type': 'text/plain',
         },
         body: JSON.stringify({
           timestamp: new Date().toISOString(),
@@ -118,8 +118,7 @@ const ContactForm = () => {
         })
       });
   
-      // Since no-cors won't give us a response we can read,
-      // we'll assume success and redirect
+      // Since we're using no-cors, assume success and redirect
       window.parent.location.href = redirectUrl;
     } catch (error) {
       console.error('Error submitting form:', error);

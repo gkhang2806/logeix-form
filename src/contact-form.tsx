@@ -85,15 +85,12 @@ const ContactForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    const submissionData = {
-      ...formData,
-      isQualified: checkQualification(),
-      wouldRedirectTo: checkQualification() 
-        ? `/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
-        : '/thank-you'
-    };
-
-    alert(JSON.stringify(submissionData, null, 2));
+    const isQualified = checkQualification();
+    const redirectUrl = isQualified 
+      ? `/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
+      : '/thank-you';
+      
+    window.location.href = redirectUrl;
   };
 
   const currencySymbol = isUK ? '£' : '$';

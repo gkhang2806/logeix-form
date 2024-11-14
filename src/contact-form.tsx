@@ -95,7 +95,7 @@ const ContactForm = () => {
 
     try {
       // First send to Google Sheets
-      const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyd45AaPeTrg2oARdqVWBhL8h6XLFRxXR6lfD8DJ3EjZnZZzIfaQSln9gQ44rMGleJ7ZA/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

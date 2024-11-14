@@ -48,9 +48,35 @@ const ContactForm = () => {
 
   // Check if user is in UK timezone
   useEffect(() => {
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const ukTimeZones = ['Europe/London'];
-    setIsUK(ukTimeZones.includes(userTimeZone));
+    // Try multiple methods to detect UK location
+    const detectUK = () => {
+      try {
+        // Method 1: Try timezone
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (userTimeZone === 'Europe/London') return true;
+  
+        // Method 2: Try browser language
+        const userLanguage = navigator.language || (navigator as any).userLanguage;
+        if (userLanguage.toLowerCase().includes('gb')) return true;
+  
+        // Method 3: Try to check parent frame's location (if in iframe)
+        if (window !== window.parent) {
+          try {
+            const parentLocation = document.referrer;
+            if (parentLocation.includes('.uk') || parentLocation.includes('.gb')) return true;
+          } catch (e) {
+            console.log('Could not access parent frame location');
+          }
+        }
+  
+        return false;
+      } catch (e) {
+        console.error('Error detecting location:', e);
+        return false;
+      }
+    };
+  
+    setIsUK(detectUK());
   }, []);
 
   // Get page source from URL parameters

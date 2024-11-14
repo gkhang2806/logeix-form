@@ -127,7 +127,7 @@ const ContactForm = () => {
       : `${parentDomain}/thank-you`;
   
       // Start the fetch but don't await it
-      fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbykBWLSsxgBaHSQ72jjxOfluK9JIZT6BB7gHuCLEImwan0pfAZOqwB9__UrC13DsUeXIQ/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {

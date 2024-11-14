@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
   Search, 
-  ShoppingCart, 
+  ShoppingCart,
+  ShoppingBag, 
   Globe, 
   Facebook,
   Package,
@@ -150,11 +151,11 @@ const ContactForm = () => {
   const currencySymbol = isUK ? '£' : '$';
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 space-y-6 bg-[#f4fdfa] rounded-lg">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 space-y-6 bg-[#f4fdfa] text-[#333] rounded-lg">
       {/* Basic Information */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Full Name</label>
+          <label className="block text-[#000037b3] mb-2 font-semibold">Full Name</label>
           <input
             type="text"
             required
@@ -165,7 +166,7 @@ const ContactForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Email Address</label>
+          <label className="block text-[#000037b3] mb-2 font-semibold">Email Address</label>
           <input
             type="email"
             required
@@ -176,7 +177,7 @@ const ContactForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">
+          <label className="block text-[#000037b3] mb-2 font-semibold">
             Phone Number <span className="text-gray-500 text-sm">(Include country code)</span>
           </label>
           <input
@@ -190,7 +191,7 @@ const ContactForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Website URL</label>
+          <label className="block text-[#000037b3] mb-2 font-semibold">Website URL</label>
           <input
             type="text"
             required
@@ -217,20 +218,20 @@ const ContactForm = () => {
 
       {/* Business Model */}
       <div className="space-y-4">
-        <label className="block text-sm font-medium mb-2">
+        <label className="block text-[#000037b3] mb-2 font-semibold">
           Which of these best describes your business model?
         </label>
-        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+        <div className="flex flex-wrap gap-2">
           {[
             { id: 'dtc-brand', label: 'DTC Brand', icon: Package },
-            { id: 'online-retailer', label: 'Online Retailer', icon: ShoppingCart },
+            { id: 'online-retailer', label: 'Online Retailer', icon: ShoppingBag },
             { id: 'online-offline-retailer', label: 'Online & Offline Retailer', icon: Store },
             { id: 'dropshipping', label: 'Dropshipping', icon: Globe },
             { id: 'agency-consultant', label: 'Agency or Consultant', icon: Briefcase },
           ].map((option) => (
             <label
               key={option.id}
-              className={`flex items-center p-4 border-2 rounded-lg cursor-pointer bg-white 
+              className={`flex items-center px-4 py-[10px] border-2 rounded-lg cursor-pointer bg-white 
                 ${formData.businessModel === option.label ? 'border-emerald-500 bg-white hover:bg-gray-50' : 'hover:bg-gray-50'}`}
             >
               <input
@@ -242,8 +243,8 @@ const ContactForm = () => {
                 className="sr-only"
                 required
               />
-              <option.icon className="w-5 h-5 mr-3 text-gray-600" />
-              <span className="text-sm font-medium">{option.label}</span>
+              <option.icon className="w-4 h-4 mr-2 text-gray-600" />
+              <span className="text-sm">{option.label}</span>
             </label>
           ))}
         </div>
@@ -253,10 +254,10 @@ const ContactForm = () => {
         <>
           {/* Monthly Revenue */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-[#000037b3] mb-2 font-semibold">
               What was your average monthly Shopify revenue over the last 3 months?
             </label>
-            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-2">
               {[
                 'Zero (Startup)',
                 `Less than ${currencySymbol}15,000`,
@@ -268,7 +269,7 @@ const ContactForm = () => {
               ].map((option) => (
                 <label
                   key={option}
-                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer bg-white 
+                  className={`flex items-center px-4 py-[10px] border-2 rounded-lg cursor-pointer bg-white 
                     ${formData.monthlyRevenue === option ? 'border-emerald-500 bg-white hover:bg-gray-50' : 'hover:bg-gray-50'}`}
                 >
                   <input
@@ -280,7 +281,7 @@ const ContactForm = () => {
                     className="sr-only"
                     required
                   />
-                  <span className="text-sm font-medium">{option}</span>
+                  <span className="text-sm">{option}</span>
                 </label>
               ))}
             </div>
@@ -288,10 +289,10 @@ const ContactForm = () => {
 
           {/* Monthly Marketing Spend */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-[#000037b3] mb-2 font-semibold">
               How much do you currently spend on digital marketing per month?
             </label>
-            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-2">
               {[
                 `Less than ${currencySymbol}10,000`,
                 `${currencySymbol}10,000 - ${currencySymbol}14,999`,
@@ -299,7 +300,7 @@ const ContactForm = () => {
               ].map((option) => (
                 <label
                   key={option}
-                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer bg-white 
+                  className={`flex items-center px-4 py-[10px] border-2 rounded-lg cursor-pointer bg-white 
                     ${formData.monthlySpend === option ? 'border-emerald-500 bg-white hover:bg-gray-50' : 'hover:bg-gray-50'}`}
                 >
                   <input
@@ -311,7 +312,7 @@ const ContactForm = () => {
                     className="sr-only"
                     required
                   />
-                  <span className="text-sm font-medium">{option}</span>
+                  <span className="text-sm">{option}</span>
                 </label>
               ))}
             </div>
@@ -319,10 +320,10 @@ const ContactForm = () => {
 
           {/* Marketing Channels */}
           <div className="space-y-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-[#000037b3] mb-2 font-semibold">
               Which channels do you use for marketing? <span className="text-gray-500">(Select all that apply)</span>
             </label>
-            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-2">
               {[
                 { id: 'Marketing-Channel-SEO', label: 'SEO', icon: TextSearch },
                 { id: 'Marketing-Channel-Google-Shopping', label: 'Google Shopping', icon: ShoppingCart },
@@ -331,7 +332,7 @@ const ContactForm = () => {
               ].map((channel) => (
                 <label
                   key={channel.id}
-                  className={`flex items-center p-4 border-2 rounded-lg cursor-pointer bg-white 
+                  className={`flex items-center px-4 py-[10px] border-2 rounded-lg cursor-pointer bg-white 
                     ${formData.marketingChannels.includes(channel.label) ? 'border-emerald-500 bg-white hover:bg-gray-50' : 'hover:bg-gray-50'}`}
                 >
                   <input
@@ -347,14 +348,14 @@ const ContactForm = () => {
                     }}
                     className="sr-only"
                   />
-                  <channel.icon className="w-5 h-5 mr-3 text-gray-600" />
-                  <span className="text-sm font-medium">{channel.label}</span>
+                  <channel.icon className="w-4 h-4 mr-2 text-gray-600" />
+                  <span className="text-sm">{channel.label}</span>
                 </label>
               ))}
               
               {/* Other Marketing Channel */}
               <label
-                className={`flex items-center p-4 border-2 rounded-lg cursor-pointer bg-white 
+                className={`flex items-center px-4 py-[10px] border-2 rounded-lg cursor-pointer bg-white 
                   ${formData.marketingChannels.includes('Other') ? 'border-emerald-500 bg-white hover:bg-gray-50' : 'hover:bg-gray-50'}`}
               >
                 <input
@@ -370,8 +371,8 @@ const ContactForm = () => {
                   }}
                   className="sr-only"
                 />
-                <Asterisk className="w-5 h-5 mr-3 text-gray-600" />
-                <span className="text-sm font-medium">Other</span>
+                <Asterisk className="w-4 h-4 mr-2 text-gray-600" />
+                <span className="text-sm">Other</span>
               </label>
               
               {formData.marketingChannels.includes('Other') && (
@@ -379,7 +380,7 @@ const ContactForm = () => {
                   type="text"
                   name="Marketing-Channel-Other"
                   placeholder="Please specify"
-                  className="w-full px-4 py-2 border-2 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none col-span-2"
+                  className="w-full mt-2 px-4 py-2 border-2 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none col-span-2"
                   value={formData.otherMarketingChannel}
                   onChange={(e) => setFormData({...formData, otherMarketingChannel: e.target.value})}
                   required={formData.marketingChannels.includes('Other')}
@@ -393,7 +394,7 @@ const ContactForm = () => {
       {/* Agency Message */}
       {isAgencyConsultant && (
         <div className="space-y-4">
-          <label className="block text-sm font-medium mb-2">How can we help you?</label>
+          <label className="block text-[#000037b3] mb-2 font-semibold">How can we help you?</label>
           <textarea
             name="Agency-Message"
             required

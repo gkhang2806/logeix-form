@@ -82,15 +82,42 @@ const ContactForm = () => {
     }
   }, [formData.businessModel, formData.monthlyRevenue]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     const isQualified = checkQualification();
     const redirectUrl = isQualified 
       ? `/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : '/thank-you';
-      
-    window.location.href = redirectUrl;
+
+    try {
+      // First send to Google Sheets
+      const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          ...formData,
+          isQualified
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      // Then redirect the parent window
+      window.parent.location.href = redirectUrl;
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setIsSubmitting(false);
+      // You might want to show an error message to the user here
+    }
   };
 
   const currencySymbol = isUK ? '£' : '$';
@@ -353,9 +380,14 @@ const ContactForm = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full bg-[#ffd749] text-xl text-[#2e2e2e] font-bold py-3 px-6 rounded-lg hover:translate-y-[10px] transition-transform duration-300 ease-in-out"
+        disabled={isSubmitting}
+        className={`w-full bg-[#ffd749] text-xl text-[#2e2e2e] font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out
+          ${isSubmitting 
+            ? 'opacity-75 cursor-not-allowed'
+            : 'hover:translate-y-[10px]'
+          }`}
       >
-        Submit
+        {isSubmitting ? 'Working on it...' : 'Submit'}
       </button>
     </form>
   );

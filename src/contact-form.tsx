@@ -98,7 +98,6 @@ const ContactForm = () => {
       // Try to get parent's location, fallback to referrer if not accessible
       try {
         const parentLocation = window.parent.location.hostname;
-        console.log('Parent location:', parentLocation);
         
         if (parentLocation.includes('webflow.io')) {
           parentDomain = 'https://logeix.webflow.io';
@@ -108,7 +107,6 @@ const ContactForm = () => {
       } catch (e) {
         // If we can't access parent location (CORS), use document.referrer
         const referrer = document.referrer;
-        console.log('Using referrer:', referrer);
         
         if (referrer.includes('webflow.io')) {
           parentDomain = 'https://logeix.webflow.io';
@@ -122,17 +120,13 @@ const ContactForm = () => {
         ? 'https://logeix.webflow.io' 
         : 'https://logeix.com';
     }
-    
-    console.log('Selected parent domain:', parentDomain);
-    
+        
     const redirectUrl = isQualified 
       ? `${parentDomain}/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
       : `${parentDomain}/thank-you`;
   
-    console.log('Will redirect to:', redirectUrl);
-  
-    try {
-      await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
+      // Start the fetch but don't await it
+      fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -143,19 +137,14 @@ const ContactForm = () => {
           ...formData,
           isQualified
         })
-      });
-  
-      // Proper iframe-aware redirect
+      }).catch(error => console.error('Error submitting form:', error));
+
+      // Redirect immediately
       if (isInIframe) {
         window.parent.location.href = redirectUrl;
       } else {
         window.location.href = redirectUrl;
       }
-      
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setIsSubmitting(false);
-    }
   };
 
   const currencySymbol = isUK ? '£' : '$';
@@ -270,6 +259,7 @@ const ContactForm = () => {
             <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
               {[
                 'Zero (Startup)',
+                `Less than ${currencySymbol}15,000`,
                 `${currencySymbol}15,000 - ${currencySymbol}29,999`,
                 `${currencySymbol}30,000 - ${currencySymbol}49,999`,
                 `${currencySymbol}50,000 - ${currencySymbol}79,999`,

@@ -27,6 +27,12 @@ interface FormData {
   qualified: boolean;
 }
 
+const PARENT_DOMAINS = {
+  'gkhang2806.github.io': 'https://logeix.com',
+  'logeix.webflow.io': 'https://logeix.webflow.io',
+  'logeix.com': 'https://logeix.com'
+};
+
 const ContactForm = () => {
   // Form state with typed interface
   const [formData, setFormData] = useState<FormData>({
@@ -89,13 +95,17 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     const isQualified = checkQualification();
+    
+    // Get parent domain
+    const parentDomain = PARENT_DOMAINS[window.location.hostname] || 'https://logeix.com';
+    
     const redirectUrl = isQualified 
-      ? `/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
-      : '/thank-you';
+      ? `${parentDomain}/schedule?name=${encodeURIComponent(formData.name)}&email=${encodeURIComponent(formData.email)}`
+      : `${parentDomain}/thank-you`;
   
     try {
       // Using no-cors mode
-      await fetch('https://script.google.com/macros/s/AKfycbyd45AaPeTrg2oARdqVWBhL8h6XLFRxXR6lfD8DJ3EjZnZZzIfaQSln9gQ44rMGleJ7ZA/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbznKpAbMm5m1xBgfkSaWT_BVP-ZVwPeYCeV3kCq3j5t-IOLgTcDeHfqn8GuE_YC6Doanw/exec', {
         method: 'POST',
         mode: 'no-cors',  // Changed this
         headers: {
@@ -229,7 +239,6 @@ const ContactForm = () => {
             <div className="grid grid-cols-1 min-[480px]:grid-cols-2 gap-4">
               {[
                 'Zero (Startup)',
-                `Less than ${currencySymbol}15,000`,
                 `${currencySymbol}15,000 - ${currencySymbol}29,999`,
                 `${currencySymbol}30,000 - ${currencySymbol}49,999`,
                 `${currencySymbol}50,000 - ${currencySymbol}79,999`,

@@ -27,6 +27,12 @@ interface FormData {
   qualified: boolean;
 }
 
+// Define the type for our domain mapping
+type DomainMap = {
+  [key: string]: string;
+};
+
+// Add the type to our domains object
 const PARENT_DOMAINS: DomainMap = {
   'gkhang2806.github.io': 'https://logeix.com',
   'logeix.webflow.io': 'https://logeix.webflow.io',
